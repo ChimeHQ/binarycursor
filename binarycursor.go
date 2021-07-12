@@ -37,7 +37,7 @@ func (c *BinaryCursor) ReadUint8() (uint8, error) {
 		return 0, err
 	}
 
-	if n != 1 {
+	if n != len(buf) {
 		return 0, ErrReadWrongSize
 	}
 
@@ -52,9 +52,39 @@ func (c *BinaryCursor) ReadUint16() (uint16, error) {
 		return 0, err
 	}
 
-	if n != 2 {
+	if n != len(buf) {
 		return 0, ErrReadWrongSize
 	}
 
 	return c.order.Uint16(buf), err
+}
+
+func (c *BinaryCursor) ReadUint32() (uint32, error) {
+	buf := []byte{0x0, 0x0, 0x0, 0x0}
+
+	n, err := c.r.Read(buf)
+	if err != nil {
+		return 0, err
+	}
+
+	if n != len(buf) {
+		return 0, ErrReadWrongSize
+	}
+
+	return c.order.Uint32(buf), err
+}
+
+func (c *BinaryCursor) ReadUint64() (uint64, error) {
+	buf := []byte{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
+
+	n, err := c.r.Read(buf)
+	if err != nil {
+		return 0, err
+	}
+
+	if n != len(buf) {
+		return 0, ErrReadWrongSize
+	}
+
+	return c.order.Uint64(buf), err
 }
