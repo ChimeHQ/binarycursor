@@ -7,6 +7,7 @@ import (
 )
 
 var ErrReadWrongSize = errors.New("Wrong size")
+var ErrReaderInvalid = errors.New("Reader is nil")
 
 type BinaryCursor struct {
 	r     io.Reader
@@ -18,6 +19,16 @@ func NewBinaryCursor(r io.Reader) BinaryCursor {
 		r:     r,
 		order: binary.LittleEndian,
 	}
+}
+
+func NewBinaryCursorAt(r io.ReaderAt, pos int64) BinaryCursor {
+	pr := NewPositionReaderAt(r, pos)
+
+	return NewBinaryCursor(&pr)
+}
+
+func (c *BinaryCursor) Read(p []byte) (n int, err error) {
+	return c.r.Read(p)
 }
 
 func (c *BinaryCursor) FlipOrder() {
@@ -32,7 +43,7 @@ func (c *BinaryCursor) FlipOrder() {
 func (c *BinaryCursor) ReadUint8() (uint8, error) {
 	buf := []byte{0x0}
 
-	n, err := c.r.Read(buf)
+	n, err := c.Read(buf)
 	if err != nil {
 		return 0, err
 	}
@@ -47,7 +58,7 @@ func (c *BinaryCursor) ReadUint8() (uint8, error) {
 func (c *BinaryCursor) ReadUint16() (uint16, error) {
 	buf := []byte{0x0, 0x0}
 
-	n, err := c.r.Read(buf)
+	n, err := c.Read(buf)
 	if err != nil {
 		return 0, err
 	}
@@ -62,7 +73,7 @@ func (c *BinaryCursor) ReadUint16() (uint16, error) {
 func (c *BinaryCursor) ReadUint32() (uint32, error) {
 	buf := []byte{0x0, 0x0, 0x0, 0x0}
 
-	n, err := c.r.Read(buf)
+	n, err := c.Read(buf)
 	if err != nil {
 		return 0, err
 	}
@@ -77,7 +88,7 @@ func (c *BinaryCursor) ReadUint32() (uint32, error) {
 func (c *BinaryCursor) ReadUint64() (uint64, error) {
 	buf := []byte{0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}
 
-	n, err := c.r.Read(buf)
+	n, err := c.Read(buf)
 	if err != nil {
 		return 0, err
 	}
