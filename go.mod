@@ -1,4 +1,4 @@
-module github.com/stacksift/binarycursor
+module github.com/chimehq/binarycursor
 
 go 1.16
 
