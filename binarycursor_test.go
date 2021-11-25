@@ -98,3 +98,17 @@ func TestReadUint364(t *testing.T) {
 
 	assert.Equal(t, uint64(0x0809101112131415), v)
 }
+
+func TestReadString(t *testing.T) {
+	data := []byte{0x61, 0x62, 0x63, 0x00}
+	reader := bytes.NewReader(data)
+
+	c := NewBinaryCursor(reader)
+
+	s, err := c.ReadNullTerminatedUTF8String()
+	if assert.Nil(t, err) == false {
+		return
+	}
+
+	assert.Equal(t, "abc", s)
+}

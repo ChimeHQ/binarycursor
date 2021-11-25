@@ -99,3 +99,22 @@ func (c *BinaryCursor) ReadUint64() (uint64, error) {
 
 	return c.order.Uint64(buf), err
 }
+
+func (c *BinaryCursor) ReadNullTerminatedUTF8String() (string, error) {
+	data := []byte{}
+
+	for {
+		n, err := c.ReadUint8()
+		if err != nil {
+			return "", err
+		}
+
+		if n == 0 {
+			break
+		}
+
+		data = append(data, n)
+	}
+
+	return string(data), nil
+}

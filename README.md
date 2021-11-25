@@ -14,6 +14,8 @@ _, err := c.ReadUint16()
 _, err := c.ReadUint32()
 _, err := c.ReadUint64()
 
+// strings
+_, err := c.ReadNullTerminatedUTF8String()
 
 // LEB128
 _, err := c.ReadUleb128()
