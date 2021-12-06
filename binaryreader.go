@@ -17,6 +17,11 @@ func NewBinaryReader(r io.Reader) BinaryReader {
 	}
 }
 
+func NewBinaryReaderAt(r io.ReaderAt, pos int64) BinaryReader {
+	pr := NewPositionReaderAt(r, pos)
+	return NewBinaryReader(&pr)
+}
+
 func (br *BinaryReader) Read(p []byte) (n int, err error) {
 	return br.r.Read(p)
 }

@@ -13,16 +13,20 @@ type BinaryCursor struct {
 	br BinaryReader
 }
 
-func NewBinaryCursor(r io.Reader) BinaryCursor {
+func NewBinaryReaderCursor(br BinaryReader) BinaryCursor {
 	return BinaryCursor{
-		br: NewBinaryReader(r),
+		br: br,
 	}
 }
 
-func NewBinaryCursorAt(r io.ReaderAt, pos int64) BinaryCursor {
-	pr := NewPositionReaderAt(r, pos)
+func NewBinaryCursor(r io.Reader) BinaryCursor {
+	br := NewBinaryReader(r)
+	return NewBinaryReaderCursor(br)
+}
 
-	return NewBinaryCursor(&pr)
+func NewBinaryReaderAtCursor(r io.ReaderAt, pos int64) BinaryCursor {
+	br := NewBinaryReaderAt(r, pos)
+	return NewBinaryReaderCursor(br)
 }
 
 func (c *BinaryCursor) Read(p []byte) (n int, err error) {
@@ -31,6 +35,10 @@ func (c *BinaryCursor) Read(p []byte) (n int, err error) {
 
 func (c *BinaryCursor) Order() binary.ByteOrder {
 	return c.br.Order
+}
+
+func (c *BinaryCursor) SetOrder(o binary.ByteOrder) {
+	c.br.Order = o
 }
 
 func (c *BinaryCursor) FlipOrder() {
