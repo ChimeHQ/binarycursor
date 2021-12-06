@@ -1,11 +1,19 @@
 package binarycursor
 
 func (c *BinaryCursor) ReadUleb128() (uint64, error) {
+	return c.br.ReadUleb128()
+}
+
+func (c *BinaryCursor) ReadSleb128() (int64, error) {
+	return c.br.ReadSleb128()
+}
+
+func (br *BinaryReader) ReadUleb128() (uint64, error) {
 	var u uint64
 	var n int64
 
 	for n = 0; n < 10; n++ {
-		value, err := c.ReadUint8()
+		value, err := br.ReadUint8()
 		if err != nil {
 			return 0, err
 		}
@@ -19,12 +27,12 @@ func (c *BinaryCursor) ReadUleb128() (uint64, error) {
 	return u, nil
 }
 
-func (c *BinaryCursor) ReadSleb128() (int64, error) {
+func (br *BinaryReader) ReadSleb128() (int64, error) {
 	var s int64
 	var n int64
 
 	for n = 0; n < 10; n++ {
-		value, err := c.ReadUint8()
+		value, err := br.ReadUint8()
 		if err != nil {
 			return 0, err
 		}

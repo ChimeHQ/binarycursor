@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadUint8(t *testing.T) {
-	data := []byte{0x08, 0x09, 0x10, 0x11}
+func TestCursorReadConsecutiveUint8s(t *testing.T) {
+	data := []byte{0x08, 0x09, 0x0a, 0x0b}
 	reader := bytes.NewReader(data)
 
 	c := NewBinaryCursor(reader)
@@ -19,32 +19,27 @@ func TestReadUint8(t *testing.T) {
 	}
 
 	assert.Equal(t, uint8(8), v)
-}
 
-func TestReadUint16(t *testing.T) {
-	data := []byte{0x08, 0x09}
-	reader := bytes.NewReader(data)
-
-	c := NewBinaryCursor(reader)
-
-	v, err := c.ReadUint16()
+	v, err = c.ReadUint8()
 	if assert.Nil(t, err) == false {
 		return
 	}
 
-	assert.Equal(t, uint16(0x0908), v)
+	assert.Equal(t, uint8(9), v)
 
-	reader = bytes.NewReader(data)
-
-	c = NewBinaryCursor(reader)
-	c.FlipOrder()
-
-	v, err = c.ReadUint16()
+	v, err = c.ReadUint8()
 	if assert.Nil(t, err) == false {
 		return
 	}
 
-	assert.Equal(t, uint16(0x0809), v)
+	assert.Equal(t, uint8(10), v)
+
+	v, err = c.ReadUint8()
+	if assert.Nil(t, err) == false {
+		return
+	}
+
+	assert.Equal(t, uint8(11), v)
 }
 
 func TestReadUint32(t *testing.T) {
