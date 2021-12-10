@@ -33,12 +33,16 @@ func (c *BinaryCursor) Read(p []byte) (n int, err error) {
 	return c.br.Read(p)
 }
 
-func (c *BinaryCursor) Order() binary.ByteOrder {
+func (c BinaryCursor) Order() binary.ByteOrder {
 	return c.br.Order
 }
 
 func (c *BinaryCursor) SetOrder(o binary.ByteOrder) {
 	c.br.Order = o
+}
+
+func (c BinaryCursor) Offset() int64 {
+	return c.br.Offset()
 }
 
 func (c *BinaryCursor) FlipOrder() {

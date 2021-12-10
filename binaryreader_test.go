@@ -19,6 +19,7 @@ func TestReadUint8(t *testing.T) {
 	}
 
 	assert.Equal(t, uint8(8), v)
+	assert.Equal(t, int64(1), br.Offset())
 }
 
 func TestReadUint16(t *testing.T) {
@@ -33,6 +34,7 @@ func TestReadUint16(t *testing.T) {
 	}
 
 	assert.Equal(t, uint16(0x0908), v)
+	assert.Equal(t, int64(2), br.Offset())
 
 	reader = bytes.NewReader(data)
 
@@ -45,4 +47,5 @@ func TestReadUint16(t *testing.T) {
 	}
 
 	assert.Equal(t, uint16(0x0809), v)
+	assert.Equal(t, int64(2), br.Offset())
 }

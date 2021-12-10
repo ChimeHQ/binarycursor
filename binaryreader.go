@@ -6,13 +6,15 @@ import (
 )
 
 type BinaryReader struct {
-	r     io.Reader
+	r     CountingReader
 	Order binary.ByteOrder
 }
 
 func NewBinaryReader(r io.Reader) BinaryReader {
+	cr := NewCountingReader(r)
+
 	return BinaryReader{
-		r:     r,
+		r:     cr,
 		Order: binary.LittleEndian,
 	}
 }
@@ -35,10 +37,14 @@ func (br *BinaryReader) FlipOrder() {
 	}
 }
 
+func (br BinaryReader) Offset() int64 {
+	return br.r.Offset
+}
+
 func (br *BinaryReader) ReadUint8() (uint8, error) {
 	buf := []byte{0x0}
 
-	n, err := br.r.Read(buf)
+	n, err := br.Read(buf)
 
 	if err != nil {
 		return 0, err

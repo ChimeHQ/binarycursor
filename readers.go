@@ -5,21 +5,21 @@ import (
 )
 
 type CountingReader struct {
-	r     io.Reader
-	count int64
+	r      io.Reader
+	Offset int64
 }
 
 func NewCountingReader(r io.Reader) CountingReader {
 	return CountingReader{
-		r:     r,
-		count: 0,
+		r:      r,
+		Offset: 0,
 	}
 }
 
 func (c *CountingReader) Read(p []byte) (n int, err error) {
-	n, err = c.Read(p)
+	n, err = c.r.Read(p)
 
-	c.count += int64(n)
+	c.Offset += int64(n)
 
 	return n, err
 }
@@ -36,10 +36,10 @@ func NewPositionReaderAt(r io.ReaderAt, pos int64) PositionReaderAt {
 	}
 }
 
-func (c *PositionReaderAt) Read(p []byte) (n int, err error) {
-	n, err = c.r.ReadAt(p, c.pos)
+func (pr *PositionReaderAt) Read(p []byte) (n int, err error) {
+	n, err = pr.r.ReadAt(p, pr.pos)
 
-	c.pos += int64(n)
+	pr.pos += int64(n)
 
 	return n, err
 }
